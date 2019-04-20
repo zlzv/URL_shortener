@@ -7,8 +7,8 @@
 
 ```json
 {
-	'err': 3,
-	'msg': 'Wrong username or password'
+	"err": 3,
+	"msg": "Wrong username or password"
 }
 ```
 - 1 - Unknown error
