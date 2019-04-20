@@ -1,10 +1,10 @@
 # URL Shortener
-<br>
-<br>
-###API Methods
-<br>
-####Errors
+
+### API Methods
+
+#### Errors
 -------------
+
 ```json
 {
 	'err': 3,
@@ -17,10 +17,10 @@
 - 4 - Link does not exist
 - 5 - Links not found
 
-<br>
-####Authentication
+
+#### Authentication
 -------------
-######`POST api/auth`
+###### `POST api/auth`
 Returns JSON web token (JWT)
 
 | Parameter  | Example |
@@ -28,17 +28,16 @@ Returns JSON web token (JWT)
 | username  | admin  |
 | password  | 12345  |
 
-######Response
+###### Response
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImV4cCI6MTU1NTYxNjkyNiwiaWF0IjoxNTU1NjE2MDI2LCJ0eXBlIjoiYWNjZXNzIiwibmJmIjoxNTU1NjE2MDI2LCJpZGVudGl0eSI6MTAwMDEsImp0aSI6IjYyMmMzOTlmLTI4MjgtNGVlNy1hNWNiLTc5MmFjODU0MWMzYiIsInVzZXJfY2xhaW1zIjp7InVzZXJfaWQiOjEwMDAxfX0.b1d1wr-o-JvKjwsFNfsiJBiWqDJ-vI-Kb-vaxhHKSBw"
 }
 ```
 
-<br>
-####Registration
+#### Registration
 -------------
-######`POST api/join`
+###### `POST api/join`
 
 
 | Parameter  | Example |
@@ -46,7 +45,7 @@ Returns JSON web token (JWT)
 | username  | Ivan  |
 | password  | 12345  |
 
-######Response
+###### Response
 ```json
 {
   "success": "true",
@@ -54,10 +53,9 @@ Returns JSON web token (JWT)
 }
 ```
 
-<br>
-####Create a short link
+#### Create a short link
 -------------
-######`POST api/short`
+###### `POST api/short`
 
 | Parameter  | Example |
 | ------------- | ------------- |
@@ -65,7 +63,7 @@ Returns JSON web token (JWT)
 
 Header: "Authorization: Bearer {JWT}"
 
-######Response
+###### Response
 ```json
 {
   "short": "url-shortener.domain/2Wc",
@@ -74,10 +72,9 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-<br>
-####Get information about a link
+#### Get information about a link
 -------------
-######`POST api/info`
+###### `POST api/info`
 
 | Parameter  | Example |
 | ------------- | ------------- |
@@ -85,7 +82,7 @@ Header: "Authorization: Bearer {JWT}"
 
 Header: "Authorization: Bearer {JWT}"
 
-######Response
+###### Response
 ```json
 {
   "short": "url-shortener.domain/2Wc",
@@ -95,10 +92,9 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-<br>
-####Get all links belongs to a user
+#### Get all links belongs to a user
 -------------
-######`POST api/all`
+###### `POST api/all`
 
 | Parameter  | Example |
 | ------------- | ------------- |
@@ -106,7 +102,7 @@ Header: "Authorization: Bearer {JWT}"
 
 Header: "Authorization: Bearer {JWT}"
 
-######Response
+###### Response
 ```json
 {
   "data": [
@@ -126,10 +122,9 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-<br>
-####Delete a link
+#### Delete a link
 -------------
-######`POST api/delete`
+###### `POST api/delete`
 
 | Parameter  | Example |
 | ------------- | ------------- |
@@ -137,7 +132,7 @@ Header: "Authorization: Bearer {JWT}"
 
 Header: "Authorization: Bearer {JWT}"
 
-######Response
+###### Response
 ```json
 {
   "success": "true",
