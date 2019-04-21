@@ -7,4 +7,4 @@ class BaseConfig(object):
     BCRYPT_LOG_ROUNDS = 13
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://username:password@server/db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    HOST = 'your_host://'
+    HOST = 'your_host'

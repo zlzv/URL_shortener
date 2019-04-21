@@ -1,15 +1,13 @@
 from flask import jsonify, request, redirect
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_claims
 import string
-from string import ascii_lowercase
-from string import ascii_uppercase
+from string import ascii_lowercase, ascii_uppercase
 from math import floor
 from app import app, db, bcrypt, jwt
 from app.models import User, Url
-from flask_cors import CORS
 
 
-CORS(app, resources=r'/api/*')
+host = app.config['HOST']
 
 
 #
@@ -18,13 +16,13 @@ CORS(app, resources=r'/api/*')
 @app.route('/api/join', methods=['POST'])
 def register():
     if not request.is_json:
-        return jsonify({'err': 2, 'description': 'Missing JSON in request'})
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'})
     username = request.json.get('username')
     password = request.json.get('password')
     if not username:
-        return jsonify({'err': 2, "description": "Missing username"}), 400
+        return jsonify({'err': 2, "msg": "Missing username"}), 400
     if not password:
-        return jsonify({'err': 2, "description": "Missing password"}), 400
+        return jsonify({'err': 2, "msg": "Missing password"}), 400
     user = User(
         password=password,
         username=username
@@ -32,10 +30,10 @@ def register():
     try:
         db.session.add(user)
         db.session.commit()
-        return jsonify({'result': 'User has been successfully registered'}), 201
+        return jsonify({'success': 'true', 'msg': 'User has been successfully registered'}), 201
     except:
         db.session.rollback()
-        return jsonify({'err': 1, 'description': 'User can not be registered'}), 500
+        return jsonify({'err': 1, 'msg': 'User can not be registered'}), 500
 
 
 #
@@ -44,19 +42,19 @@ def register():
 @app.route('/api/auth', methods=['POST'])
 def auth():
     if not request.is_json:
-        return jsonify({'err': 2, 'description': 'Missing JSON in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
     username = request.json.get('username')
     password = request.json.get('password')
     if not username:
-        return jsonify({'err': 2, 'description': 'Missing username'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing username'}), 400
     if not password:
-        return jsonify({'err': 2, 'description': 'Missing password'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing password'}), 400
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token), 200
+        return jsonify({'token': access_token}), 200
     else:
-        return jsonify({'err': 3, 'description': 'Wrong username or password'}), 400
+        return jsonify({'err': 3, 'msg': 'Wrong username or password'}), 400
 
 
 #
@@ -66,11 +64,11 @@ def auth():
 @jwt_required
 def get_short():
     if not request.is_json:
-        return jsonify({'err': 2, 'description': 'Missing JSON in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
     claims = get_jwt_claims()
     long_url = request.json.get('url', None)
     if not long_url:
-        return jsonify({'err': 2, 'description': 'Missing url in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing url in request'}), 400
     url = Url(
         user_id=claims['user_id'],
         url=long_url
@@ -80,10 +78,10 @@ def get_short():
         db.session.flush()
         short_url = encode(url.id)
         db.session.commit()
-        return jsonify({'short': short_url, 'long': long_url}), 201
+        return jsonify({'short': host + short_url, 'long': long_url, 'url_end': short_url}), 201
     except:
         db.session.rollback()
-        return jsonify({'err': 1, 'description': 'Unable to create short link'}), 500
+        return jsonify({'err': 1, 'msg': 'Unable to create short link'}), 500
 
 
 
@@ -94,18 +92,18 @@ def get_short():
 @jwt_required
 def delete():
     if not request.is_json:
-        return jsonify({'err': 2, 'description': 'Missing JSON in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
     end = request.json.get('url_end', None)
     if not end:
-        return jsonify({'err': 2, 'description': 'Missing url_end in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing url_end in request'}), 400
     id = decode(end)
     deleted = Url.query.filter_by(id=id).delete()
     if deleted:
         db.session.commit()
-        return jsonify({'result': 'Link has been successfully deleted'}), 200
+        return jsonify({'success': 'true', 'msg': 'Link has been successfully deleted'}), 200
     else:
         db.session.rollback()
-        return jsonify({'err': 1, 'description': "Can't delete link"}), 500
+        return jsonify({'err': 1, 'msg': "Can't delete link"}), 500
 
 
 #
@@ -115,22 +113,21 @@ def delete():
 @jwt_required
 def get_info():
     if not request.is_json:
-        return jsonify({'err': 2, 'description': 'Missing JSON in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
     end = request.json.get('url_end', None)
     if not end:
-        return jsonify({'err': 2, 'description': 'Missing url_end in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing url_end in request'}), 400
     id = decode(end)
     url_info = Url.query.filter_by(id=id).first()
     if url_info:
-        host = app.config['HOST']
         return jsonify({
             'short': host + encode(url_info.id),
             'views': url_info.views,
-            'created_on': url_info.created_on,
+            'created_at': url_info.created_at,
             'long': url_info.url
         }), 200
     else:
-        return jsonify({'err': 4, 'description': "Link doesn't exist"}), 500
+        return jsonify({'err': 4, 'msg': "Link doesn't exist"}), 500
 
 
 #
@@ -142,11 +139,16 @@ def get_all():
     claims = get_jwt_claims()
     user_id = claims['user_id']
     urls = Url.query.filter_by(user_id=user_id).all()
-    links = [{'destination': record.url, 'views': record.views, 'date': record.created_on} for record in urls]
+    links = [{
+        'short': host + encode(record.id),
+        'long': record.url,
+        'views': record.views,
+        'created_at': record.created_at
+    } for record in urls]
     if links:
         return jsonify({'data': links}), 200
     else:
-        return jsonify({'err': 5, 'description': 'Links not found'}), 404
+        return jsonify({'err': 5, 'msg': 'Links not found'}), 404
 
 
 #
@@ -155,11 +157,11 @@ def get_all():
 @app.route('/<short_url>')
 def redirection(short_url):
     if not short_url:
-        return jsonify({'err': 2, 'description': 'Missing short url in request'}), 400
+        return jsonify({'err': 2, 'msg': 'Missing short url in request'}), 400
     decoded = decode(short_url)
     url = Url.query.filter_by(id=decoded).first()
     if not url:
-        return jsonify({'err': 4, 'description': "Link doesn't exist"}), 404
+        return jsonify({'err': 4, 'msg': "Link doesn't exist"}), 404
     try:
         redirect_url = url.url
         url.views += 1  # Clicks counter
@@ -167,7 +169,7 @@ def redirection(short_url):
         return redirect(redirect_url)
     except:
         db.session.rollback()
-        return jsonify({'err': 1, 'description': "Cant't redirect"}), 500
+        return jsonify({'err': 1, 'msg': "Cant't redirect"}), 500
 
 
 #
