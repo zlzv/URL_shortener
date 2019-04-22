@@ -1,8 +1,8 @@
 # URL Shortener
 
-### API Methods
+## API Methods
 
-#### Errors
+### Errors
 -------------
 
 ```json
@@ -18,7 +18,7 @@
 - 5 - Links not found
 
 
-#### Authentication
+### Authentication
 -------------
 ###### `POST api/auth`
 Returns JSON web token (JWT)
@@ -35,7 +35,7 @@ Returns JSON web token (JWT)
 }
 ```
 
-#### Registration
+### Registration
 -------------
 ###### `POST api/join`
 
@@ -53,7 +53,7 @@ Returns JSON web token (JWT)
 }
 ```
 
-#### Create a short link
+### Create a short link
 -------------
 ###### `POST api/short`
 
@@ -72,7 +72,7 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-#### Get information about a link
+### Get information about a link
 -------------
 ###### `POST api/info`
 
@@ -92,7 +92,7 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-#### Get all links belongs to a user
+### Get all links belongs to a user
 -------------
 ###### `POST api/all`
 
@@ -122,7 +122,7 @@ Header: "Authorization: Bearer {JWT}"
 }
 ```
 
-#### Delete a link
+### Delete a link
 -------------
 ###### `POST api/delete`
 

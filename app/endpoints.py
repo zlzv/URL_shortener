@@ -60,8 +60,8 @@ def auth():
 #
 # Creates new short link
 #
-@app.route('/api/short', methods=['POST'])
 @jwt_required
+@app.route('/api/short', methods=['POST'])
 def get_short():
     if not request.is_json:
         return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
@@ -88,8 +88,8 @@ def get_short():
 #
 # Deletes the the specified short link
 #
-@app.route('/api/delete', methods=['POST'])
 @jwt_required
+@app.route('/api/delete', methods=['POST'])
 def delete():
     if not request.is_json:
         return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
@@ -109,8 +109,8 @@ def delete():
 #
 # Returns information about the specified short link
 #
-@app.route('/api/info', methods=['POST'])
 @jwt_required
+@app.route('/api/info', methods=['POST'])
 def get_info():
     if not request.is_json:
         return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
@@ -133,8 +133,8 @@ def get_info():
 #
 # Returns all links belongs to the user
 #
-@app.route('/api/all', methods=['POST'])
 @jwt_required
+@app.route('/api/all', methods=['POST'])
 def get_all():
     claims = get_jwt_claims()
     user_id = claims['user_id']
