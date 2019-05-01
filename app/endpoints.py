@@ -137,15 +137,26 @@ def get_info():
 @app.route('/api/all', methods=['POST'])
 def get_all():
     claims = get_jwt_claims()
+    if not request.is_json:
+        return jsonify({'err': 2, 'msg': 'Missing JSON in request'}), 400
+    since = request.json.get('since')
+    per_page = request.json.get('per_page')
+    page = request.json.get('page')
+    if not page:
+        return jsonify({'err': 2, 'msg': 'Missing page in request'}), 400
+    elif not per_page:
+        return jsonify({'err': 2, 'msg': 'Missing per_page in request'}), 400
+    date_since = since if(since) else ''
+    offset = (page-1)*per_page
     user_id = claims['user_id']
-    urls = Url.query.filter_by(user_id=user_id).all()
+    urls = Url.query.filter(Url.created_at >= date_since, user_id == user_id).limit(per_page).offset(offset)
     links = [{
         'short': host + encode(record.id),
         'long': record.url,
         'views': record.views,
         'created_at': record.created_at
     } for record in urls]
-    if links:
+    if urls:
         return jsonify({'data': links}), 200
     else:
         return jsonify({'err': 5, 'msg': 'Links not found'}), 404

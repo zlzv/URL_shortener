@@ -7,8 +7,8 @@
 
 ```json
 {
-	"err": 3,
-	"msg": "Wrong username or password"
+  "err": 3,
+  "msg": "Wrong username or password"
 }
 ```
 - 1 - Unknown error
@@ -98,7 +98,9 @@ Header: "Authorization: Bearer {JWT}"
 
 | Parameter  | Example |
 | ------------- | ------------- |
-| -  | -  |
+| page  | 1  |
+| per_page (max 100)  | 50  |
+| since(optional parameter)  | 2019-04-17  |
 
 Header: "Authorization: Bearer {JWT}"
 
@@ -109,13 +111,13 @@ Header: "Authorization: Bearer {JWT}"
     {
       "short": "url-shortener.domain/2Wc",
 	  "long": "example.com",
-	  "created_at": "Sun, 14 Apr 2019 23:40:47 GMT",
+	  "created_at": "Sun, 17 Apr 2019 23:40:47 GMT",
       "views": 3
     },
     {
       "short": "url-shortener.domain/2Be",
 	  "long": "example.com/abc",
-	  "created_at": "Sun, 14 Apr 2019 23:21:58 GMT",
+	  "created_at": "Sun, 19 Apr 2019 23:21:58 GMT",
       "views": 0
     }
   ]

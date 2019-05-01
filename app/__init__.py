@@ -12,7 +12,7 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 app.config.from_object(BaseConfig)
-app.config['JWT_SECRET_KEY'] = 'your_secret_key'
+app.config['JWT_SECRET_KEY'] = 'YOUR_SECRET_KEY'
 
 
 from app import endpoints
